@@ -20,8 +20,18 @@ class Product extends BaseService
         return $this->Product_model->select($select)->findAll();
     }
 
+    public function getAllId() : array
+    {
+        $array_select = $this->Product_model->select('id')->get()->getResultArray();
+        $ids = [];
+        foreach ($array_select as $select)
+            $ids[] = $select['id'];
 
-    public function getNameByid(int $id) : ?\App\Entities\Product
+        return $ids;
+    }
+
+
+    public function getNameById(int $id) : ?\App\Entities\Product
     {
         return $this->Product_model->select('name')->where('id', $id)->first();
     }
@@ -34,5 +44,15 @@ class Product extends BaseService
     public function insert(array $Products)
     {
         return $this->Product_model->insertBatch($Products);
+    }
+
+    public function delete(array $Products)
+    {
+        return $this->Product_model->delete($Products);
+    }
+
+    public function save(array $Products)
+    {
+        return $this->Product_model->save($Products);
     }
 }

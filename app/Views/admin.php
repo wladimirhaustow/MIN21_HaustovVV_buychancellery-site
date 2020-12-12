@@ -26,24 +26,13 @@
 			let AdminTable;
 		
 			$("#saveBtn").click(()=>{
-				
-				let resultTable = [];
-				
-				AdminTable.tableInfo.forEach(x => {
-					resultTable.push({
-						name: x.name
-					});
-				});
-
-
-				
 				$.ajax({
 					type: "POST",
 					url: '/Product/setProduct',
-                    data: JSON.stringify(resultTable),
+                    data: JSON.stringify(AdminTable.tableInfo),
 					dataType: 'JSON'
 				}).done(obj => {
-					alert("Сохранил");
+					alert("Сохранено!");
 				});
 			});
 		
@@ -60,13 +49,14 @@
 				isFirstwAddNewElInTable = true;
 				lastElId = null;
 				tableInfo = [];
+				tableTrNumber = 1;
 				
 				constructor(tableId, data = null) 
 				{
 					//Записываем id таблицы (tbody), для дальнейшей работы
 					if($(`#${tableId}`).length)
 						this.tableId = tableId;
-					else return console.error("Передан не верный id таблицы");
+					else return console.error("Передан неверный id таблицы");
 					
 					//если есть данные сразу их нарисуем в таблице
 					if(data !== null)
@@ -98,7 +88,7 @@
 								
 							}
 							
-							this.lastElId = data[data.length - 1].id + 1;
+							this.lastElId = Number.parseInt(data[data.length - 1].id) + 1;
 							
 						} else this.lastElId = 1;
 						
@@ -109,7 +99,6 @@
 					} else return console.error("Переданные данные не являются массивом");
 				}
 				
-				//Приватный метод, предпологается, что будет использован только в пределах класса
 				_addElInTable(el)
 				{
 					this.tableInfo.push({
@@ -123,7 +112,7 @@
 						}).append(
 							jQuery('<th/>', {
 								scope: "row",
-								text: el.id
+								text: this.tableTrNumber
 							}),
 							jQuery('<td/>', {
 								id: "elTdText_" + el.id
@@ -151,6 +140,7 @@
 							)
 						)
 					);
+                    this.tableTrNumber = this.tableTrNumber + 1;
 					
 					$("#elTdText_" + el.id).click(()=>{
 						
@@ -206,7 +196,7 @@
 							}).append(
 								jQuery('<th/>', {
 									scope: "row",
-									text: this.lastElId
+									text: this.tableTrNumber
 								}),
 								jQuery('<td/>', {
 								}).append(
@@ -234,8 +224,6 @@
 					} else return console.error("Метод отрисовки еще не был вызва ни разу!");						
 					
 				}
-				
-				
 			}
 			
 			start();

@@ -57,17 +57,10 @@ $routes->group('Product', ['filter' => 'auth'], function(RouteCollection $routes
 
 $routes->group('Request', ['filter' => 'auth'], function(RouteCollection $routes)
 {
-    $routes->get('getRequest', 'Request::get');
-    $routes->post('setRequest', 'Request::set');
+    $routes->get('getRequest', 'Request::get', ['filter' => 'auth:purchaser']);
+    $routes->get('getRequest/(:num)', 'Request::getById/$1', ['filter' => 'auth:purchaser']);
     $routes->post('send', 'Request::send');
 });
-
-$routes->group('Purchaser', ['filter' => 'auth:purchaser'], function(RouteCollection $routes)
-{
-    $routes->get('get', 'Purchaser::get');
-    $routes->get('getRequest/(:num)', 'Request::getByUserId/$1');
-});
-
 
 
 /**

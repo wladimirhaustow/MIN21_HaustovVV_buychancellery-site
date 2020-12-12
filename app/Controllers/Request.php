@@ -13,50 +13,47 @@ class Request extends BaseController
 
 
     public function get(){
-        $Products = ServicesDAL::userRequest()->getAll((int)Services::session()->userData['id'], 'id, product, count, FIO, telephone, comment');
 
+        $UserRequest = [];
 
-        return $this->response->setStatusCode(200)->setJSON($Products);
-    }
+        $AllRequest = ServicesDAL::userRequest()->getAll();
 
-    public function getByUserId($userId){
-        $Products = ServicesDAL::userRequest()->getAll($userId, 'id, product, count, FIO, telephone, comment');
+        if(!empty($AllRequest)){
+            foreach ($AllRequest as $Request){
+                $User_entity = ServicesDAL::user()->getUserById($Request->user);
+                $UserRequest[$Request->id] = $User_entity->login.' ['.$Request->created_at->toDateTimeString().']';
 
-        foreach ($Products as &$Product){
-            $Product->product = ServicesDAL::product()->getNameByid($Product->product)->name;
+            }
+
         }
-        unset($Product);
 
-        return $this->response->setStatusCode(200)->setJSON($Products);
+        return $this->response->setStatusCode(200)->setJSON($UserRequest);
     }
 
+    public function getById($userId){
+        $UserRequest = ServicesDAL::userRequest()->getById($userId);
 
-    public function set(){
-        ServicesDAL::userRequest()->delAll((int)Services::session()->userData['id']);
+        $UserRequests = unserialize($UserRequest->request);
 
-        $Products = $this->request->getJSON();
-
-        foreach ($Products as &$Product) {
-            $Product->user = (int)Services::session()->userData['id'];
+        foreach ($UserRequests as &$UserRequest){
+            $UserRequest->product = ServicesDAL::product()->getNameById($UserRequest->product)->name;
         }
-        unset($Product);
+        unset($UserRequest);
 
-
-        ServicesDAL::userRequest()->insert($Products);
-
+        return $this->response->setStatusCode(200)->setJSON($UserRequests);
     }
+
 
     public function send(){
-        $this->set();
+        $Products = $this->request->getJSON();
 
+        $ProductsSerial = serialize($Products);
 
-        $ToPurchaser_entity = ServicesDAL::toPurchaser()->getByUserId((int)Services::session()->userData['id']);
+        $Request = new \App\Entities\Request();
+        $Request->request = $ProductsSerial;
+        $Request->user = (int)Services::session()->userData['id'];
 
-        if(is_null($ToPurchaser_entity))
-        {
-            $ToPurchaser = ['user' => (int)Services::session()->userData['id']];
-            ServicesDAL::toPurchaser()->insert($ToPurchaser);
-        }
+        ServicesDAL::userRequest()->insert($Request);
 
     }
 }

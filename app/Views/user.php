@@ -6,7 +6,7 @@
 				<tr>
 				  <th scope="col">#</th>
 				  <th scope="col">Наименование</th>
-				  <th scope="col">Колличество</th>
+				  <th scope="col">Количество</th>
 				  <th scope="col">ФИО Кому</th>
 				  <th scope="col">Телефон Кому</th>
 				  <th scope="col">Примечание</th>
@@ -18,9 +18,9 @@
 			  </tbody>
 			</table>
 			
-			<div class="my-5 row">
-				<button type="button" class="col mx-auto btn btn-primary" id="saveBtn">Сохранить черновик</button>
-				<button type="button" class="col mx-auto btn btn-success" id="sendBtn">Сохранить и Отправить</button>
+			<div class="my-4 row">
+				<button type="button" class="col btn btn-primary mr-3" id="saveBtn">Сохранить черновик</button>
+				<button type="button" class="col btn btn-success" id="sendBtn">Подписать и Отправить</button>
 			</div>
 		</main>			
 		
@@ -38,7 +38,7 @@
             function start(){
                 let data = [];
 
-                if(localStorage['data'] != "" && localStorage['data'] != undefined)
+                if(localStorage['data'] !== "" && localStorage['data'] !== undefined)
                 {
                     data = JSON.parse(localStorage['data']);
                 }
@@ -50,7 +50,7 @@
 			function getNameById(id)
             {
                 for(let i=0;i<names.length;i++){
-                    if(names[i].id == id)
+                    if(names[i].id === id)
                         return names[i].name;
                 }
             }
@@ -58,7 +58,7 @@
 			function getNameIdByText(text)
 			{
                 for(let i=0;i<names.length;i++){
-                    if(names[i].name == text)
+                    if(names[i].name === text)
                         return names[i].id;
                 }
 
@@ -69,15 +69,12 @@
                 {
                     localStorage['data'] = JSON.stringify(UserTable.tableInfo);
                 } else return alert("Сохранять нечего");
-
-
-
             });
 		
 			$("#sendBtn").click(()=>{
-				
+
 				let resultTable = [];
-				
+
 				UserTable.tableInfo.forEach(x => {
 					resultTable.push({
 						product: x.name,
@@ -96,7 +93,7 @@
                     data: JSON.stringify(resultTable),
                     dataType: 'JSON'
                 }).done(obj => {
-                    alert("Сохранил");
+                    alert("Отправлено!");
                 });
 			});
 		
@@ -273,7 +270,7 @@
                     }
 					
 					$("#elTdName_" + el.id).click(()=>{
-						if($("#inputEditName_1")[0].style.display == "none")
+						if($("#inputEditName_"+ el.id)[0].style.display == "none")
 						{
 							let textInputName = $("#elName_" + el.id).text();
 						
@@ -284,7 +281,7 @@
 						}					
 					});
 					
-					$("#elCount_" + el.id).click(()=>{
+					$("#elTdCount_" + el.id).click(()=>{
 						let textInputCount = $("#elCount_" + el.id).text();
 						
 						$("#inputEditCount_" + el.id).val(textInputCount);
@@ -293,7 +290,7 @@
 						$("#inputEditCount_" + el.id).focus();
 					});
 
-					$("#elFIO_" + el.id).click(()=>{
+					$("#elTdFIO_" + el.id).click(()=>{
 						let textInputFIO = $("#elFIO_" + el.id).text();
 
 						$("#inputEditFIO_" + el.id).val(textInputFIO);
@@ -302,7 +299,7 @@
 						$("#inputEditFIO_" + el.id).focus();
 					});
 					
-					$("#elPhone_" + el.id).click(()=>{
+					$("#elTdPhone_" + el.id).click(()=>{
 						let textInputPhone = $("#elPhone_" + el.id).text();
 						
 						$("#inputEditPhone_" + el.id).val(textInputPhone);
@@ -311,7 +308,7 @@
 						$("#inputEditPhone_" + el.id).focus();
 					});
 					
-					$("#elComment_" + el.id).click(()=>{
+					$("#elTdComment_" + el.id).click(()=>{
 						let textInputComment = $("#elComment_" + el.id).text();
 						
 						$("#inputEditComment_" + el.id).val(textInputComment);
@@ -325,7 +322,7 @@
 					let tmpFunctionName = ()=>{
 						let newName = $("#inputEditName_" + el.id).val();
 						
-						$("#elName_" + el.id).text(names[newName]);
+						$("#elName_" + el.id).text(getNameById(newName));
 						$("#elName_" + el.id).show();
 						$("#inputEditName_" + el.id).hide();
 						let tabeleEl = this.tableInfo.find(x => x.id === el.id);
@@ -340,7 +337,7 @@
 						let newCount = $("#inputEditCount_" + el.id).val();
 						
 						if(isNaN(Number(newCount)))
-							return alert("Блять введи число уебок!");
+							return alert("Введите число!");
 						
 						$("#elCount_" + el.id).text(newCount);
 						$("#elCount_" + el.id).show();

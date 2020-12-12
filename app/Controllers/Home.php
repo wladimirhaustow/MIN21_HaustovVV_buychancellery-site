@@ -8,7 +8,7 @@ class Home extends BaseController
 	{
 
 	    switch (Services::session()->userData['status']){
-            case 1 : return view('zkup');
+            case 1 : return view('user');
                 break;
 
             case 2 : return view('admin');

@@ -13,11 +13,7 @@ class Request extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
-        'product',
-        'count',
-        'FIO',
-        'telephone',
-        'comment',
+        'request',
         'user',
     ];
 

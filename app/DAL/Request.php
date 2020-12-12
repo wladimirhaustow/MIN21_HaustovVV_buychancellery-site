@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpIncompatibleReturnTypeInspection */
 
 
 namespace App\DAL;
@@ -16,19 +16,25 @@ class Request extends BaseService
         $this->Request_model = new RequestModel();
     }
 
-    public function getAll(int $userId, string $select = '') : array
+    public function getAll() : array
     {
-        return $this->Request_model->select($select)->where('user', $userId)->findAll();
+        return $this->Request_model->where('id >', 0)->findAll();
     }
+
+    public function getById(int $id) : ?\App\Entities\Request
+    {
+        return $this->Request_model->where('id', $id)->first();
+    }
+
 
     public function delAll(int $userId)
     {
         return $this->Request_model->where('user', $userId)->delete();
     }
 
-    public function insert(array $Products)
+    public function insert(\App\Entities\Request $Products)
     {
-        return $this->Request_model->insertBatch($Products);
+        return $this->Request_model->insert($Products);
     }
 
 

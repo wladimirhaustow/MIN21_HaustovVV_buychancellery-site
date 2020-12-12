@@ -11,16 +11,13 @@
 				<tr>
 				  <th scope="col">#</th>
 				  <th scope="col">Наименование</th>
-				  <th scope="col">Колличество</th>
+				  <th scope="col">Количество</th>
 				  <th scope="col">ФИО кому</th>
 				  <th scope="col">Телефон Кому</th>
 				  <th scope="col">Примечание</th>
 				</tr>
 			  </thead>
 			  <tbody id="table">
-				
-				
-				
 			  </tbody>
 			</table>
 		</main>
@@ -31,9 +28,7 @@
 			start();
 			function start()
 			{
-                //let data;
-
-                $.getJSON('/Purchaser/get', function(json) {
+                $.getJSON('/Request/getRequest', function(json) {
                     for(let dataId in json)
                     {
                         let dataVal = json[dataId];
@@ -52,13 +47,12 @@
                 $("#users").change(() => {
                     $(`#table`).empty();
 
-                    let userId = $("#users").val();
+                    let requestId = $("#users").val();
 
-                    function tutAjaxZaprosNaPoluchenieUseraPoId(userId)
+                    function getRequestById(requestId)
                     {
-                        //этот el ты тип получил из ajax
 
-                        $.getJSON('/Purchaser/getRequest/'+userId, function(json) {
+                        $.getJSON('/Request/getRequest/'+requestId, function(json) {
                             let el = json;
 
                             for(let i=0;i<el.length;i++){
@@ -67,7 +61,7 @@
                                     }).append(
                                         jQuery('<th/>', {
                                             scope: "row",
-                                            text: el[i].id
+                                            text: i+1
                                         }),
                                         jQuery('<td/>', {
                                             text: el[i].product
@@ -93,16 +87,9 @@
 
                     }
 
-                    tutAjaxZaprosNaPoluchenieUseraPoId(userId);
+                    getRequestById(requestId);
                 });
-
-
-				
 			}
-			
-		
-			
-
 		</script>
 	</body>	
 </html>
