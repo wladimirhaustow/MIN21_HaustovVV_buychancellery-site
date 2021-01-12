@@ -15,7 +15,7 @@ class User extends Model
     protected $allowedFields = [
         'login',
         'password',
-        'user_status'
+        'bdSeeds'
     ];
 
     protected $returnType    = 'App\Entities\User';
